@@ -2,9 +2,18 @@
 
 namespace Every8d;
 
-use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Uri;
+use Every8d\Exception\BadResponseException;
+use Every8d\Exception\ErrorResponseException;
+use Every8d\Exception\NotFoundException;
+use Every8d\Exception\UnexpectedResponseException;
+use Http\Client\HttpClient;
+use Http\Discovery\HttpClientDiscovery;
+use Http\Discovery\MessageFactoryDiscovery;
+use Http\Discovery\UriFactoryDiscovery;
+use Http\Message\RequestFactory;
+use Http\Message\UriFactory;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
@@ -17,11 +26,6 @@ class Client
     const DEFAULT_USER_AGENT = 'every8d-php/' . self::LIBRARY_VERSION;
 
     /**
-     * @var ClientInterface
-     */
-    protected $httpClient;
-
-    /**
      * @var string
      */
     protected $username;
@@ -30,6 +34,21 @@ class Client
      * @var string
      */
     protected $password;
+
+    /**
+     * @var HttpClient
+     */
+    protected $httpClient;
+
+    /**
+     * @var RequestFactory
+     */
+    protected $requestFactory;
+
+    /**
+     * @var UriFactory
+     */
+    protected $uriFactory;
 
     /**
      * @var string
@@ -41,13 +60,20 @@ class Client
      */
     protected $baseURL;
 
-    public function __construct(string $username, string $password, ClientInterface $httpClient)
-    {
+    public function __construct(
+        string $username,
+        string $password,
+        HttpClient $httpClient = null,
+        RequestFactory $requestFactory = null,
+        UriFactory $uriFactory = null
+    ) {
         $this->username = $username;
         $this->password = $password;
+        $this->httpClient = $httpClient ?: HttpClientDiscovery::find();
+        $this->requestFactory = $requestFactory ?: MessageFactoryDiscovery::find();
+        $this->uriFactory = $uriFactory ?: UriFactoryDiscovery::find();
         $this->userAgent = self::DEFAULT_USER_AGENT;
-        $this->baseURL = new Uri(self::DEFAULT_BASE_URL);
-        $this->httpClient = $httpClient;
+        $this->baseURL = $this->setBaseURL(self::DEFAULT_BASE_URL);
     }
 
     public function getUserAgent(): string
@@ -67,9 +93,9 @@ class Client
         return $this->baseURL;
     }
 
-    public function setBaseURL(UriInterface $baseURL): self
+    public function setBaseURL(string $baseURL): self
     {
-        $this->baseURL = $baseURL;
+        $this->baseURL = $this->uriFactory->createUri($baseURL);
 
         return $this;
     }
@@ -79,10 +105,18 @@ class Client
      * @param string|UriInterface $uri
      * @param string|null $contentType
      * @param string|null|resource|StreamInterface $body
-     * @return Request
+     * @return RequestInterface
      */
-    public function newRequest(string $method, $uri, string $contentType = null, $body = null): Request
+    public function newRequest(string $method, $uri, string $contentType = null, $body = null): RequestInterface
     {
+        $uri = $this->uriFactory->createUri($uri);
+        if ($uri->getScheme() !== '') {
+            $uri = $uri->withScheme($this->baseURL->getScheme())
+                ->withUserInfo($this->baseURL->getUserInfo())
+                ->withHost($this->baseURL->getHost())
+                ->withPort($this->baseURL->getPort());
+        }
+
         $headers = [
             'User-Agent' => $this->userAgent,
         ];
@@ -90,11 +124,81 @@ class Client
             $headers['Content-Type'] = $contentType;
         }
 
-        return new Request(
+        return $this->requestFactory->createRequest(
             $method,
             $uri,
             $headers,
             $body
         );
+    }
+
+    /**
+     * @param string|UriInterface $uri
+     * @param array $body
+     * @return RequestInterface
+     */
+    public function newFormRequest($uri, array $body = []): RequestInterface
+    {
+        $body['UID'] = $this->username;
+        $body['PWD'] = $this->password;
+
+        return $this->newRequest('POST', $uri, $body);
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @return ResponseInterface
+     * @throws BadResponseException
+     * @throws ErrorResponseException
+     * @throws NotFoundException
+     * @throws UnexpectedResponseException
+     * @throws \Exception
+     * @throws \Http\Client\Exception
+     */
+    public function send(RequestInterface $request): ResponseInterface
+    {
+        $response = $this->httpClient->sendRequest($request);
+
+        $this->checkErrorResponse($response);
+
+        return $response;
+    }
+
+    /**
+     * Check the API response for errors
+     *
+     * @param ResponseInterface $response
+     * @throws BadResponseException
+     * @throws ErrorResponseException
+     * @throws NotFoundException
+     * @throws UnexpectedResponseException
+     */
+    public function checkErrorResponse(ResponseInterface $response)
+    {
+        $statusCode = $response->getStatusCode();
+        switch ($statusCode) {
+            case 200:
+                if (!$response->getBody()->getSize()) {
+                    throw new BadResponseException('Unexpected empty body');
+                }
+
+                $first = $response->getBody()->read(1);
+                $response->getBody()->rewind();
+
+                if ($first === '-') {
+                    $contents = $response->getBody()->getContents();
+                    $error = explode(',', $contents);
+
+                    throw new ErrorResponseException(trim($error[1]), (int)$error[0]);
+                }
+
+                break;
+            case 404:
+                throw new NotFoundException('Not found');
+                break;
+            default:
+                throw new UnexpectedResponseException(sprintf('Unexpected status code: %d', $statusCode));
+                break;
+        }
     }
 }
