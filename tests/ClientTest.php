@@ -6,7 +6,7 @@ use Every8d\Client;
 use Every8d\Exception\BadResponseException;
 use Every8d\Exception\ErrorResponseException;
 use Every8d\Exception\NotFoundException;
-use Every8d\Exception\UnexpectedResponseException;
+use Every8d\Exception\UnexpectedStatusCodeException;
 use Http\Client\HttpClient;
 use Http\Discovery\UriFactoryDiscovery;
 use PHPUnit\Framework\TestCase;
@@ -190,7 +190,7 @@ class ClientTest extends TestCase
 
     public function testSendWithUnexpectedResponseException()
     {
-        $this->expectException(UnexpectedResponseException::class);
+        $this->expectException(UnexpectedStatusCodeException::class);
         $this->expectExceptionMessage('Unexpected status code: 402');
 
         $httpClient = $this->createMockHttpClient($this->createResponse(402));

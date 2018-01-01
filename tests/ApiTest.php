@@ -3,6 +3,7 @@
 namespace Every8d\Tests;
 
 use Every8d\Client;
+use Every8d\Exception\BadResponseException;
 use Every8d\Message\MMS;
 use Every8d\Message\SMS;
 use PHPUnit\Framework\TestCase;
@@ -17,7 +18,7 @@ class ApiTest extends TestCase
         $client = new Client('', '', $this->createMockHttpClient($resp));
 
         $expected = 79.0;
-        $actual = $client->getApi()->credit();
+        $actual = $client->getApi()->getCredit();
 
         $this->assertEquals($expected, $actual);
     }
@@ -72,5 +73,74 @@ class ApiTest extends TestCase
         ]));
 
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testShouldBeOkWhenGetDeliveryStatusBySMS()
+    {
+        $resp = $this->createResponse(
+            200,
+            null,
+            [],
+            "2\nTest	+886987654321	2017/12/18 23:14:17	1	100\n	+886987654321	2017/12/18 23:14:18	0	101\n"
+        );
+        $client = new Client('', '', $this->createMockHttpClient($resp));
+
+        $expected = [
+            'Count' => 2,
+            'Records' => [
+                [
+                    'Name' => 'Test',
+                    'Mobile' => '+886987654321',
+                    'SendTime' => '2017/12/18 23:14:17',
+                    'Cost' => 1.0,
+                    'Status' => 100,
+                ],
+                [
+                    'Name' => '',
+                    'Mobile' => '+886987654321',
+                    'SendTime' => '2017/12/18 23:14:18',
+                    'Cost' => 0.0,
+                    'Status' => 101,
+                ],
+            ],
+        ];
+        $actual = $client->getApi()->getDeliveryStatusBySMS('00000000-0000-0000-0000-000000000000', 1);
+
+        $this->assertEquals($expected['Records'], $actual['Records']);
+    }
+
+    public function testShouldBeOkWhenGetDeliveryStatusByMMS()
+    {
+        $resp = $this->createResponse(
+            200,
+            null,
+            [],
+            "0\n"
+        );
+        $client = new Client('', '', $this->createMockHttpClient($resp));
+
+        $expected = [
+            'Count' => 0,
+            'Records' => [
+            ],
+        ];
+        $actual = $client->getApi()->getDeliveryStatusByMMS('00000000-0000-0000-0000-000000000000');
+
+        $this->assertEquals($expected['Records'], $actual['Records']);
+    }
+
+    public function testGetDeliveryStatusBySMSWithBadResponseException()
+    {
+        $this->expectException(BadResponseException::class);
+        $this->expectExceptionMessage('Invalid delivery status');
+
+        $resp = $this->createResponse(
+            200,
+            null,
+            [],
+            "0"
+        );
+        $client = new Client('', '', $this->createMockHttpClient($resp));
+        $client->getApi()->getDeliveryStatusByMMS('00000000-0000-0000-0000-000000000000');
     }
 }

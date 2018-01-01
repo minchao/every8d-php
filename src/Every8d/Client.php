@@ -5,7 +5,7 @@ namespace Every8d;
 use Every8d\Exception\BadResponseException;
 use Every8d\Exception\ErrorResponseException;
 use Every8d\Exception\NotFoundException;
-use Every8d\Exception\UnexpectedResponseException;
+use Every8d\Exception\UnexpectedStatusCodeException;
 use Http\Client\HttpClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
@@ -164,7 +164,7 @@ class Client
      * @throws BadResponseException
      * @throws ErrorResponseException
      * @throws NotFoundException
-     * @throws UnexpectedResponseException
+     * @throws UnexpectedStatusCodeException
      * @throws \Exception
      * @throws \Http\Client\Exception
      */
@@ -184,7 +184,7 @@ class Client
      * @throws BadResponseException
      * @throws ErrorResponseException
      * @throws NotFoundException
-     * @throws UnexpectedResponseException
+     * @throws UnexpectedStatusCodeException
      */
     public function checkErrorResponse(ResponseInterface $response)
     {
@@ -210,7 +210,7 @@ class Client
                 throw new NotFoundException('Not found');
                 break;
             default:
-                throw new UnexpectedResponseException(sprintf('Unexpected status code: %d', $statusCode));
+                throw new UnexpectedStatusCodeException(sprintf('Unexpected status code: %d', $statusCode));
                 break;
         }
     }
