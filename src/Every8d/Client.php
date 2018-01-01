@@ -73,7 +73,12 @@ class Client
         $this->requestFactory = $requestFactory ?: MessageFactoryDiscovery::find();
         $this->uriFactory = $uriFactory ?: UriFactoryDiscovery::find();
         $this->userAgent = self::DEFAULT_USER_AGENT;
-        $this->baseURL = $this->setBaseURL(self::DEFAULT_BASE_URL);
+        $this->setBaseURL(self::DEFAULT_BASE_URL);
+    }
+
+    public function getHttpClient(): HttpClient
+    {
+        return $this->httpClient;
     }
 
     public function getUserAgent(): string
