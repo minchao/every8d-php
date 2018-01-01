@@ -20,4 +20,7 @@
     <file>tests</file>
 
     <!-- exclude file, e.g. Cache -->
+    <rule ref="Generic.Files.LineLength.TooLong">
+        <exclude-pattern>tests</exclude-pattern>
+    </rule>
 </ruleset>
