@@ -60,6 +60,11 @@ class Client
      */
     protected $baseURL;
 
+    /**
+     * @var Api
+     */
+    protected $api;
+
     public function __construct(
         string $username,
         string $password,
@@ -74,6 +79,7 @@ class Client
         $this->uriFactory = $uriFactory ?: UriFactoryDiscovery::find();
         $this->userAgent = self::DEFAULT_USER_AGENT;
         $this->setBaseURL(self::DEFAULT_BASE_URL);
+        $this->api = new Api($this);
     }
 
     public function getHttpClient(): HttpClient
@@ -207,5 +213,10 @@ class Client
                 throw new UnexpectedResponseException(sprintf('Unexpected status code: %d', $statusCode));
                 break;
         }
+    }
+
+    public function getApi(): Api
+    {
+        return $this->api;
     }
 }
