@@ -12,3 +12,7 @@ before_install:
 
 script:
   - composer run cs-check
+  - php vendor/bin/phpunit --coverage-clover build/coverage/xml
+
+after_script:
+  - php vendor/bin/codacycoverage clover build/coverage/xml

@@ -22,6 +22,7 @@
     "psr/http-message": "^1.0"
   },
   "require-dev": {
+    "codacy/coverage": "^1.4",
     "guzzlehttp/psr7": "^1.4",
     "php-http/mock-client": "^1.0",
     "phpunit/phpunit": "^6.5",
