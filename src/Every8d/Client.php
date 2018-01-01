@@ -108,26 +108,24 @@ class Client
     /**
      * @param string $method
      * @param string|UriInterface $uri
-     * @param string|null $contentType
+     * @param array $headers
      * @param string|null|resource|StreamInterface $body
      * @return RequestInterface
      */
-    public function newRequest(string $method, $uri, string $contentType = null, $body = null): RequestInterface
+    public function newRequest(string $method, $uri, array $headers = [], $body = null): RequestInterface
     {
         $uri = $this->uriFactory->createUri($uri);
-        if ($uri->getScheme() !== '') {
-            $uri = $uri->withScheme($this->baseURL->getScheme())
+        if ($uri->getScheme() === '') {
+            $path = rtrim($this->baseURL->getPath() . $uri->getPath(), '/');
+            $uri = $uri
+                ->withScheme($this->baseURL->getScheme())
                 ->withUserInfo($this->baseURL->getUserInfo())
                 ->withHost($this->baseURL->getHost())
-                ->withPort($this->baseURL->getPort());
+                ->withPort($this->baseURL->getPort())
+                ->withPath($path);
         }
 
-        $headers = [
-            'User-Agent' => $this->userAgent,
-        ];
-        if (!is_null($contentType)) {
-            $headers['Content-Type'] = $contentType;
-        }
+        $headers['User-Agent'] = $this->userAgent;
 
         return $this->requestFactory->createRequest(
             $method,
@@ -144,10 +142,14 @@ class Client
      */
     public function newFormRequest($uri, array $body = []): RequestInterface
     {
+        $headers = [
+            'Content-Type' => 'application/x-www-form-urlencoded',
+        ];
+
         $body['UID'] = $this->username;
         $body['PWD'] = $this->password;
 
-        return $this->newRequest('POST', $uri, $body);
+        return $this->newRequest('POST', $uri, $headers, http_build_query($body));
     }
 
     /**
