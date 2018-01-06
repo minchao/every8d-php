@@ -5,54 +5,59 @@ namespace Every8d\Message;
 class SMS implements MessageInterface
 {
     /**
-     * @var string Message title (Optional)
-     *             Empty titles are accepted
-     *             The title will not be sent with the SMS; it is just a note
+     * @var string Message subject (Optional)
+     *             The subject will not be sent with the SMS; it is just a note
      */
-    public $SB;
+    public $subject;
 
     /**
      * @var string Message content
      */
-    public $MSG;
+    public $content;
 
     /**
-     * @var string Receiver's mobile number
+     * @var string The destination phone number
      */
-    public $DEST;
+    public $to;
 
     /**
      * @var string Reservation time (Optional)
      *             Format: yyyyMMddHHmnss, e.g. 20090131153000
      */
-    public $ST;
+    public $reservationTime;
 
     /**
      * @var int SMS validity period of unit: minutes (Optional)
      *          If not specified, then the platform default validity period is 1440 minutes
      */
-    public $RETRYTIME;
+    public $retryTime;
 
     /**
-     * @var string Message record no (Optional)
+     * @var string Message record ID (Optional)
      */
-    public $MR;
+    public $id;
 
-    public function __construct(array $data = [])
+    protected $map = [
+        'to' => 'DEST',
+        'subject' => 'SB',
+        'content' => 'MSG',
+        'reservationTime' => 'ST',
+        'retryTime' => 'RETRYTIME',
+        'id' => 'MR',
+    ];
+
+    public function __construct(string $to, string $content)
     {
-        foreach ($data as $name => $value) {
-            $this->$name = $value;
-        }
+        $this->to = $to;
+        $this->content = $content;
     }
 
     public function buildFormData(): array
     {
         $data = [];
-        $vars = get_class_vars(get_class($this));
-
-        foreach ($vars as $name => $value) {
-            if ($value !== null) {
-                $data[$name] = $value;
+        foreach ($this->map as $property => $formKey) {
+            if ($this->$property !== null) {
+                $data[$formKey] = $this->$property;
             }
         }
 
