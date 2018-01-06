@@ -76,6 +76,52 @@ $result:
 
 ## 開發
 
+### 開發工具
+
+本專案提供 Command Line Developer Tools，供您在開發時作為測試工具使用
+
+指令：
+
+```
+$ bin/every8d
+Developer Tools 0.0.0
+
+Usage:
+  command [options] [arguments]
+
+Options:
+  -h, --help               Display this help message
+  -q, --quiet              Do not output any message
+  -V, --version            Display this application version
+      --ansi               Force ANSI output
+      --no-ansi            Disable ANSI output
+  -n, --no-interaction     Do not ask any interactive question
+  -u, --username=USERNAME  EVERY8D Username
+  -p, --password=PASSWORD  EVERY8D Password
+  -v|vv|vvv, --verbose     Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Available commands:
+  cancel           取消預約簡訊
+  credit           餘額查詢
+  delivery-status  發送狀態查詢
+  help             Displays help for a command
+  list             Lists commands
+  send             發送 SMS
+```
+
+發送 SMS 範例如下：
+
+```
+$ bin/every8d send -u USERNAME -p PASSWORD +886987654321 'Hello, World'
+array:5 [
+  "Credit" => 79.0
+  "Sent" => 1
+  "Cost" => 1.0
+  "Unsent" => 0
+  "BatchID" => "00000000-0000-0000-0000-000000000000"
+]
+```
+
 ### 測試
 
 執行 PHPCS 與 Unit tests
