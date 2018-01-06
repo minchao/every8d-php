@@ -24,9 +24,55 @@ composer require minchao/every8d-php php-http/curl-client
 
 ## 使用
 
+初始化 Client
+
+```php
+<?php
+
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$client = new \Every8d\Client('USERNAME', 'PASSWORD');
+```
+
 ## 範例
 
-## 開發
+### 發送 SMS
+
+Example:
+
+```php
+try {
+    $sms = new \Every8d\Message\SMS('+886987654321', 'Hello, 世界');
+    $result = $client->getApi()->sendSMS($sms);
+} catch (\Exception $e) {
+    // 處理異常
+}
+```
+
+$result:
+
+```php
+[
+    'Credit' => 79.0,
+    'Sent' => 1,
+    'Cost' => 1.0,
+    'Unsent' => 0,
+    'BatchID' => '00000000-0000-0000-0000-000000000000',
+]
+```
+
+## 支援 APIs
+
+- 取得帳戶餘額
+  - [x] API21/HTTP/getCredit.ashx
+- SMS
+  - [x] API21/HTTP/sendSMS.ashx
+  - [x] API21/HTTP/getDeliveryStatus.ashx
+  - [ ] API21/HTTP/eraseBooking.ashx
+- MMS
+  - [x] API21/HTTP/MMS/sendMMS.ashx
+  - [x] API21/HTTP/MMS/getDeliveryStatus.ashx
+  - [ ] API21/HTTP/MMS/eraseBooking.ashx
 
 ## License
 
