@@ -173,4 +173,62 @@ class Api
             'Records' => $records,
         ];
     }
+
+    /**
+     * @param string $batchID
+     * @return array
+     * @throws Exception\BadResponseException
+     * @throws Exception\ErrorResponseException
+     * @throws Exception\NotFoundException
+     * @throws Exception\UnexpectedStatusCodeException
+     * @throws \Exception
+     * @throws \Http\Client\Exception
+     */
+    public function cancelSMS(string $batchID): array
+    {
+        return $this->cancelMessage('API21/HTTP/eraseBooking.ashx', $batchID);
+    }
+
+    /**
+     * @param string $batchID
+     * @return array
+     * @throws Exception\BadResponseException
+     * @throws Exception\ErrorResponseException
+     * @throws Exception\NotFoundException
+     * @throws Exception\UnexpectedStatusCodeException
+     * @throws \Exception
+     * @throws \Http\Client\Exception
+     */
+    public function cancelMMS(string $batchID): array
+    {
+        return $this->cancelMessage('API21/HTTP/MMS/eraseBooking.ashx', $batchID);
+    }
+
+    /**
+     * @param string $uri
+     * @param string $batchID
+     * @return array
+     * @throws Exception\BadResponseException
+     * @throws Exception\ErrorResponseException
+     * @throws Exception\NotFoundException
+     * @throws Exception\UnexpectedStatusCodeException
+     * @throws \Exception
+     * @throws \Http\Client\Exception
+     */
+    protected function cancelMessage(string $uri, string $batchID): array
+    {
+        $request = $this->client->newFormRequest($uri, ['BID' => $batchID]);
+        $response = $this->client->send($request);
+        $contents = $response->getBody()->getContents();
+        $result = explode(',', $contents);
+
+        if (count($result) !== 2) {
+            throw new BadResponseException('Bad response of cancel message');
+        }
+
+        return [
+            'Canceled' => (int)$result[0],
+            'ReturnCredit' => (float)$result[1],
+        ];
+    }
 }

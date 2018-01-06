@@ -4,6 +4,7 @@ namespace Every8d\Tests;
 
 use Every8d\Client;
 use Every8d\Exception\BadResponseException;
+use Every8d\Exception\ErrorResponseException;
 use Every8d\Message\MMS;
 use Every8d\Message\SMS;
 use PHPUnit\Framework\TestCase;
@@ -142,5 +143,85 @@ class ApiTest extends TestCase
         );
         $client = new Client('', '', $this->createMockHttpClient($resp));
         $client->getApi()->getDeliveryStatusByMMS('00000000-0000-0000-0000-000000000000');
+    }
+
+    public function testShouldBeOkWhenCancelSMS()
+    {
+        $resp = $this->createResponse(
+            200,
+            null,
+            [],
+            '1,1.00'
+        );
+        $client = new Client('', '', $this->createMockHttpClient($resp));
+
+        $expected = [
+            'Canceled' => 1,
+            'ReturnCredit' => 1.0,
+        ];
+        $actual = $client->getApi()->cancelSMS('00000000-0000-0000-0000-000000000000');
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testShouldBeOkWhenCancelMMS()
+    {
+        $resp = $this->createResponse(
+            200,
+            null,
+            [],
+            '2,2.00'
+        );
+        $client = new Client('', '', $this->createMockHttpClient($resp));
+
+        $expected = [
+            'Canceled' => 2,
+            'ReturnCredit' => 2.0,
+        ];
+        $actual = $client->getApi()->cancelMMS('00000000-0000-0000-0000-000000000000');
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testCancelSMSWithBadResponseException()
+    {
+        $this->expectException(BadResponseException::class);
+        $this->expectExceptionMessage('Bad response of cancel message');
+
+        $resp = $this->createResponse(
+            200,
+            null,
+            [],
+            '1'
+        );
+        $client = new Client('', '', $this->createMockHttpClient($resp));
+        $client->getApi()->cancelSMS('00000000-0000-0000-0000-000000000000');
+    }
+
+    public function getErrorCodeOfCancelMessageCases()
+    {
+        return [
+            [-3, '無法取得指定發送資料'],
+            [-4, '發送資料為刪除狀態或已經送出'],
+        ];
+    }
+
+    /**
+     * @dataProvider getErrorCodeOfCancelMessageCases()
+     */
+    public function testCancelSMSWithBadResponseExceptionWithErrorCode(int $errorCode, string $errorMessage)
+    {
+        $this->expectException(ErrorResponseException::class);
+        $this->expectExceptionMessage($errorMessage);
+        $this->expectExceptionCode($errorCode);
+
+        $resp = $this->createResponse(
+            200,
+            null,
+            [],
+            sprintf('%d,%s', $errorCode, $errorMessage)
+        );
+        $client = new Client('', '', $this->createMockHttpClient($resp));
+        $client->getApi()->cancelSMS('00000000-0000-0000-0000-000000000000');
     }
 }
