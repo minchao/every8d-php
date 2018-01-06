@@ -7,6 +7,19 @@
 
 every8d-php 是 [EVERY8D](http://global.every8d.com.tw/) SMS HTTP API 2.1 的非官方 PHP Client SDK，使用前請先確認您已申請 EVERY8D 簡訊帳號
 
+支援的 APIs：
+
+- 取得帳戶餘額
+  - [x] API21/HTTP/getCredit.ashx
+- SMS
+  - [x] API21/HTTP/sendSMS.ashx
+  - [x] API21/HTTP/getDeliveryStatus.ashx
+  - [x] API21/HTTP/eraseBooking.ashx
+- MMS
+  - [x] API21/HTTP/MMS/sendMMS.ashx
+  - [x] API21/HTTP/MMS/getDeliveryStatus.ashx
+  - [x] API21/HTTP/MMS/eraseBooking.ashx
+
 ## 執行環境
 
 * PHP >= 7.0
@@ -14,7 +27,7 @@ every8d-php 是 [EVERY8D](http://global.every8d.com.tw/) SMS HTTP API 2.1 的非
 
 ## 安裝
 
-推薦使用 [Composer](https://getcomposer.org/) 安裝 every8d-php SDK
+推薦使用 [Composer](https://getcomposer.org/) 安裝 every8d-php SDK，請在您的專案下執行：
 
 ```
 composer require minchao/every8d-php php-http/curl-client
@@ -24,7 +37,7 @@ composer require minchao/every8d-php php-http/curl-client
 
 ## 使用
 
-初始化 Client
+初始化 Client，設定 EVERY8D 帳號與密碼
 
 ```php
 <?php
@@ -34,9 +47,9 @@ require_once(__DIR__ . '/vendor/autoload.php');
 $client = new \Every8d\Client('USERNAME', 'PASSWORD');
 ```
 
-## 範例
+### 範例
 
-### 發送 SMS
+#### 發送 SMS
 
 Example:
 
@@ -61,18 +74,15 @@ $result:
 ]
 ```
 
-## 支援 APIs
+## 開發
 
-- 取得帳戶餘額
-  - [x] API21/HTTP/getCredit.ashx
-- SMS
-  - [x] API21/HTTP/sendSMS.ashx
-  - [x] API21/HTTP/getDeliveryStatus.ashx
-  - [ ] API21/HTTP/eraseBooking.ashx
-- MMS
-  - [x] API21/HTTP/MMS/sendMMS.ashx
-  - [x] API21/HTTP/MMS/getDeliveryStatus.ashx
-  - [ ] API21/HTTP/MMS/eraseBooking.ashx
+### 測試
+
+執行 PHPCS 與 Unit tests
+
+```
+$ composer run check
+```
 
 ## License
 
