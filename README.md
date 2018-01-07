@@ -76,6 +76,48 @@ $result:
 ]
 ```
 
+### 使用 Webhook 接收簡訊發送回報
+
+若您的帳號有設定 callback 回報網址，簡訊伺服器就會在簡訊發送後以 HTTP GET 方法通知回報網址。您可參考 [webhook](./webhook/index.php) 中的範例來接收簡訊發送回報
+
+啟動 Webhook：
+
+使用 [PHP Built-in web server](http://php.net/manual/en/features.commandline.webserver.php) 快速啟動一個 Webhook 服務
+
+```
+$ php -S 127.0.0.1:80 -t webhook webhook/index.php
+PHP 7.0.26 Development Server started at Mon Jan  1 12:00:00 2018
+Listening on http://127.0.0.1:80
+Document root is /srv/www/every8d-php/webhook
+Press Ctrl-C to quit.
+```
+
+> 注意：PHP Built-in web server 僅供開發測試使用，請不要使用在正式環境或公用網路上
+
+回報範例：
+
+這是一個發送 SMS 後，接收到的回報範例
+
+```
+[Mon Jan  1 12:01:00 2018] http://your-webhook.com/callback?BatchID=00000000-0000-0000-0000-000000000000&RM=%2b886987654321&RT=20180101120002&STATUS=100&SM=Hello%2c+%e4%b8%96%e7%95%8c&CustID=CUSTID&UserNo=000000&ST=20180101120001&MR=1&SUBJECT=&NAME=NAME&USERID=USERNAME&SOURCE=&CHARGE=0
+array:14 [
+  "BatchID" => "00000000-0000-0000-0000-000000000000"
+  "RM" => "+886987654321"
+  "RT" => "20180101120002"
+  "STATUS" => "100"
+  "SM" => "Hello, 世界"
+  "CustID" => "CUSTID"
+  "UserNo" => "000000"
+  "ST" => "20180101120001"
+  "MR" => "1"
+  "SUBJECT" => ""
+  "NAME" => "NAME"
+  "USERID" => "USERNAME"
+  "SOURCE" => ""
+  "CHARGE" => "0"
+]
+```
+
 ## 開發
 
 ### 開發工具
