@@ -2,7 +2,7 @@
 
 namespace Every8d\Console;
 
-trait IoTrait
+trait HelperTrait
 {
     public function getErrorMessage(\Exception $e): string
     {

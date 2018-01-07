@@ -3,7 +3,7 @@
 namespace Every8d\Console\Command;
 
 use Every8d\Console\ClientTrait;
-use Every8d\Console\IoTrait;
+use Every8d\Console\HelperTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,7 +12,7 @@ use Symfony\Component\VarDumper\VarDumper;
 
 class Credit extends Command
 {
-    use ClientTrait, IoTrait;
+    use ClientTrait, HelperTrait;
 
     protected function configure()
     {

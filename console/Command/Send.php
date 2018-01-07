@@ -3,7 +3,7 @@
 namespace Every8d\Console\Command;
 
 use Every8d\Console\ClientTrait;
-use Every8d\Console\IoTrait;
+use Every8d\Console\HelperTrait;
 use Every8d\Message;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -16,7 +16,7 @@ use Symfony\Component\VarDumper\VarDumper;
 
 class Send extends Command
 {
-    use ClientTrait, IoTrait;
+    use ClientTrait, HelperTrait;
 
     protected function configure()
     {
