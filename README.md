@@ -32,7 +32,7 @@ every8d-php 是 [EVERY8D](http://global.every8d.com.tw/) SMS HTTP API 2.1 的非
 推薦使用 [Composer](https://getcomposer.org/) 安裝 every8d-php SDK，請在您的專案下執行：
 
 ```
-composer require minchao/every8d-php php-http/curl-client
+composer require minchao/every8d-php php-http/guzzle6-adapter
 ```
 
 > 由於 every8d-php 的 HTTP Client 是採用 HTTPlug 的實現，您可以按喜好選擇搭配的 HTTP Client，如 `php-http/curl-client` 或 `php-http/guzzle6-adapter`
