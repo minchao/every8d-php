@@ -54,6 +54,7 @@
     "cs-check": "phpcs",
     "cs-fix": "phpcbf",
     "test": "phpunit",
-    "coverage": "phpunit --coverage-clover=coverage.xml"
+    "coverage-clover": "phpunit --coverage-clover=build/coverage/clover.xml",
+    "coverage-html": "phpunit --coverage-html=build/coverage-html"
   }
 }

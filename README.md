@@ -174,6 +174,12 @@ array:5 [
 $ composer run check
 ```
 
+產生測試覆蓋率報告
+
+```
+$ composer run coverage-html
+```
+
 ## License
 
 This library is distributed under the BSD-style license found in the [LICENSE](./LICENSE) file.
