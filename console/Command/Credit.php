@@ -27,7 +27,7 @@ class Credit extends Command
         try {
             $client = $this->createClient($input);
 
-            VarDumper::dump($client->getApi()->getCredit());
+            VarDumper::dump($client->getCredit());
 
             return null;
         } catch (\Exception $e) {

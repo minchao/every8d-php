@@ -50,9 +50,9 @@ class Cancel extends Command
 
         try {
             if ($type === 'sms') {
-                $resp = $client->getApi()->cancelSMS($bid);
+                $resp = $client->cancelSMS($bid);
             } else {
-                $resp = $client->getApi()->cancelMMS($bid);
+                $resp = $client->cancelMMS($bid);
             }
 
             VarDumper::dump($resp);

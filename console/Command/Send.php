@@ -79,7 +79,7 @@ class Send extends Command
         $sms->id = $input->getOption('id');
 
         try {
-            $resp = $client->getApi()->sendSMS($sms);
+            $resp = $client->sendSMS($sms);
 
             VarDumper::dump($resp);
 

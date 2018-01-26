@@ -58,7 +58,7 @@ Example:
 ```php
 try {
     $sms = new \Every8d\Message\SMS('+886987654321', 'Hello, 世界');
-    $result = $client->getApi()->sendSMS($sms);
+    $result = $client->sendSMS($sms);
 } catch (\Exception $e) {
     // 處理異常
 }

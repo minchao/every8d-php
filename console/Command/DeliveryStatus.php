@@ -57,9 +57,9 @@ class DeliveryStatus extends Command
 
         try {
             if ($type === 'sms') {
-                $resp = $client->getApi()->getDeliveryStatusBySMS($bid, $pno);
+                $resp = $client->getDeliveryStatusBySMS($bid, $pno);
             } else {
-                $resp = $client->getApi()->getDeliveryStatusByMMS($bid, $pno);
+                $resp = $client->getDeliveryStatusByMMS($bid, $pno);
             }
 
             VarDumper::dump($resp);

@@ -6,6 +6,7 @@ use Every8d\Exception\BadResponseException;
 use Every8d\Exception\ErrorResponseException;
 use Every8d\Exception\NotFoundException;
 use Every8d\Exception\UnexpectedStatusCodeException;
+use Every8d\Message;
 use Http\Client\HttpClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
@@ -17,6 +18,15 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
+/**
+ * @method float getCredit()
+ * @method array sendSMS(Message\SMS $sms)
+ * @method array sendMMS(Message\MMS $mms)
+ * @method array getDeliveryStatusBySMS(string $batchID, int $pageNo = null)
+ * @method array getDeliveryStatusByMMS(string $batchID, int $pageNo = null)
+ * @method array cancelSMS(string $batchID)
+ * @method array cancelMMS(string $batchID)
+ */
 class Client
 {
     const LIBRARY_VERSION = '0.0.1';
@@ -80,6 +90,15 @@ class Client
         $this->userAgent = self::DEFAULT_USER_AGENT;
         $this->setBaseURL(self::DEFAULT_BASE_URL);
         $this->api = new Api($this);
+    }
+    
+    public function __call(string $method, array $arguments)
+    {
+        if (!method_exists($this->api, $method)) {
+            throw new \BadMethodCallException(sprintf('Method "%s" not found', $method));
+        }
+
+        return $this->getAPI()->$method(...$arguments);
     }
 
     public function getHttpClient(): HttpClient
