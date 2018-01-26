@@ -29,7 +29,7 @@ use Psr\Http\Message\UriInterface;
  */
 class Client
 {
-    const LIBRARY_VERSION = '0.0.1';
+    const LIBRARY_VERSION = '0.1.0';
 
     const DEFAULT_BASE_URL = 'https://oms.every8d.com/';
 
@@ -91,7 +91,7 @@ class Client
         $this->setBaseURL(self::DEFAULT_BASE_URL);
         $this->api = new Api($this);
     }
-    
+
     public function __call(string $method, array $arguments)
     {
         if (!method_exists($this->api, $method)) {
