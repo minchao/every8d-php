@@ -32,6 +32,9 @@
     "symfony/console": "^3.4",
     "symfony/var-dumper": "^3.4"
   },
+  "suggest": {
+    "php-http/guzzle6-adapter": "The HTTPlug client compatible implementation"
+  },
   "autoload": {
     "psr-4": {
       "Every8d\\": "src/Every8d"
