@@ -29,6 +29,15 @@ class ClientTest extends TestCase
         $this->assertEquals($uri, $client->setBaseURL($uri->__toString())->getBaseURL());
     }
 
+    public function testShouldThrowBadMethodCallExceptionWhenCallNotExistsMethodInClient()
+    {
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage('Method "badMethod" not found');
+
+        $client = new Client('username', 'password');
+        $client->badMethod();
+    }
+
     public function testShouldBeOkWhenNewRequest()
     {
         $client = new Client('', '', $this->createMockHttpClient());
