@@ -44,7 +44,7 @@ composer require minchao/every8d-php php-http/guzzle6-adapter
 ```php
 <?php
 
-require_once(__DIR__ . '/vendor/autoload.php');
+require_once __DIR__ . '/vendor/autoload.php';
 
 $client = new \Every8d\Client('USERNAME', 'PASSWORD');
 ```
