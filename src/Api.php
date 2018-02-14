@@ -20,12 +20,10 @@ class Api
 
     /**
      * @return float
-     * @throws Exception\BadResponseException
+     * @throws BadResponseException
      * @throws Exception\ErrorResponseException
      * @throws Exception\NotFoundException
      * @throws Exception\UnexpectedStatusCodeException
-     * @throws \Exception
-     * @throws \Http\Client\Exception
      */
     public function getCredit(): float
     {
@@ -40,12 +38,10 @@ class Api
      * @param string $uri
      * @param array $formData
      * @return array
-     * @throws Exception\BadResponseException
+     * @throws BadResponseException
      * @throws Exception\ErrorResponseException
      * @throws Exception\NotFoundException
      * @throws Exception\UnexpectedStatusCodeException
-     * @throws \Exception
-     * @throws \Http\Client\Exception
      */
     protected function send(string $uri, array $formData): array
     {
@@ -66,11 +62,10 @@ class Api
     /**
      * @param SMS $sms
      * @return array
-     * @throws Exception\BadResponseException
+     * @throws BadResponseException
+     * @throws Exception\ErrorResponseException
      * @throws Exception\NotFoundException
      * @throws Exception\UnexpectedStatusCodeException
-     * @throws \Exception
-     * @throws \Http\Client\Exception
      */
     public function sendSMS(SMS $sms): array
     {
@@ -80,12 +75,10 @@ class Api
     /**
      * @param MMS $mms
      * @return array
-     * @throws Exception\BadResponseException
+     * @throws BadResponseException
      * @throws Exception\ErrorResponseException
      * @throws Exception\NotFoundException
      * @throws Exception\UnexpectedStatusCodeException
-     * @throws \Exception
-     * @throws \Http\Client\Exception
      */
     public function sendMMS(MMS $mms): array
     {
@@ -96,12 +89,10 @@ class Api
      * @param string $batchID
      * @param int|null $pageNo
      * @return array
-     * @throws Exception\BadResponseException
+     * @throws BadResponseException
      * @throws Exception\ErrorResponseException
      * @throws Exception\NotFoundException
      * @throws Exception\UnexpectedStatusCodeException
-     * @throws \Exception
-     * @throws \Http\Client\Exception
      */
     public function getDeliveryStatusBySMS(string $batchID, int $pageNo = null): array
     {
@@ -112,12 +103,10 @@ class Api
      * @param string $batchID
      * @param int|null $pageNo
      * @return array
-     * @throws Exception\BadResponseException
+     * @throws BadResponseException
      * @throws Exception\ErrorResponseException
      * @throws Exception\NotFoundException
      * @throws Exception\UnexpectedStatusCodeException
-     * @throws \Exception
-     * @throws \Http\Client\Exception
      */
     public function getDeliveryStatusByMMS(string $batchID, int $pageNo = null): array
     {
@@ -129,12 +118,10 @@ class Api
      * @param string $batchID
      * @param int|null $pageNo
      * @return array
-     * @throws Exception\BadResponseException
+     * @throws BadResponseException
      * @throws Exception\ErrorResponseException
      * @throws Exception\NotFoundException
      * @throws Exception\UnexpectedStatusCodeException
-     * @throws \Exception
-     * @throws \Http\Client\Exception
      */
     protected function getDeliveryStatus(string $uri, string $batchID, int $pageNo = null): array
     {
@@ -177,12 +164,10 @@ class Api
     /**
      * @param string $batchID
      * @return array
-     * @throws Exception\BadResponseException
+     * @throws BadResponseException
      * @throws Exception\ErrorResponseException
      * @throws Exception\NotFoundException
      * @throws Exception\UnexpectedStatusCodeException
-     * @throws \Exception
-     * @throws \Http\Client\Exception
      */
     public function cancelSMS(string $batchID): array
     {
@@ -192,12 +177,10 @@ class Api
     /**
      * @param string $batchID
      * @return array
-     * @throws Exception\BadResponseException
+     * @throws BadResponseException
      * @throws Exception\ErrorResponseException
      * @throws Exception\NotFoundException
      * @throws Exception\UnexpectedStatusCodeException
-     * @throws \Exception
-     * @throws \Http\Client\Exception
      */
     public function cancelMMS(string $batchID): array
     {
@@ -208,12 +191,10 @@ class Api
      * @param string $uri
      * @param string $batchID
      * @return array
-     * @throws Exception\BadResponseException
+     * @throws BadResponseException
      * @throws Exception\ErrorResponseException
      * @throws Exception\NotFoundException
      * @throws Exception\UnexpectedStatusCodeException
-     * @throws \Exception
-     * @throws \Http\Client\Exception
      */
     protected function cancelMessage(string $uri, string $batchID): array
     {

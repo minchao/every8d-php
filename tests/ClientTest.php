@@ -7,8 +7,10 @@ use Every8d\Exception\BadResponseException;
 use Every8d\Exception\ErrorResponseException;
 use Every8d\Exception\NotFoundException;
 use Every8d\Exception\UnexpectedStatusCodeException;
-use Http\Client\HttpClient;
-use Http\Discovery\UriFactoryDiscovery;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
+use function GuzzleHttp\Psr7\uri_for;
 use PHPUnit\Framework\TestCase;
 
 class ClientTest extends TestCase
@@ -17,16 +19,12 @@ class ClientTest extends TestCase
 
     public function testCreate()
     {
-        $client = new Client('username', 'password', $this->createMockHttpClient());
+        $client = $this->createClient();
 
-        $this->assertInstanceOf(HttpClient::class, $client->getHttpClient());
+        $this->assertInstanceOf(ClientInterface::class, $client->getHttpClient());
         $this->assertEquals(Client::DEFAULT_USER_AGENT, $client->getUserAgent());
         $this->assertEquals('UserAgent', $client->setUserAgent('UserAgent')->getUserAgent());
         $this->assertEquals(Client::DEFAULT_BASE_URL, $client->getBaseURL());
-
-        $uri = UriFactoryDiscovery::find()->createUri('BaseURL');
-
-        $this->assertEquals($uri, $client->setBaseURL($uri->__toString())->getBaseURL());
     }
 
     public function testShouldThrowBadMethodCallExceptionWhenCallNotExistsMethodInClient()
@@ -34,15 +32,15 @@ class ClientTest extends TestCase
         $this->expectException(\BadMethodCallException::class);
         $this->expectExceptionMessage('Method "badMethod" not found');
 
-        $client = new Client('username', 'password');
+        $client = $this->createClient();
         $client->badMethod();
     }
 
     public function testShouldBeOkWhenNewRequest()
     {
-        $client = new Client('', '', $this->createMockHttpClient());
+        $client = $this->createClient();
 
-        $expected = $this->createRequest(
+        $expected = new Request(
             'GET',
             'https://oms.every8d.com/path',
             [
@@ -73,28 +71,28 @@ class ClientTest extends TestCase
         return [
             [
                 'https://oms.every8d.com/',
+                '',
+                'https://oms.every8d.com',
+            ],
+            [
+                'https://oms.every8d.com/',
                 'path',
                 'https://oms.every8d.com/path',
             ],
             [
-                'https://oms.every8d.com/basePath/',
+                'https://oms.every8d.com/',
+                'base/path',
+                'https://oms.every8d.com/base/path',
+            ],
+            [
+                'https://oms.every8d.com/base/',
                 'path',
-                'https://oms.every8d.com/basePath/path',
-            ],
-            [
-                'https://oms.every8d.com/basePath/',
-                'path/',
-                'https://oms.every8d.com/basePath/path',
-            ],
-            [
-                'https://oms.every8d.com/basePath/',
-                '',
-                'https://oms.every8d.com/basePath',
+                'https://oms.every8d.com/base/path',
             ],
             [
                 'https://oms.every8d.com/',
-                'https://example.com/path',
-                'https://example.com/path',
+                'base/path?query=string',
+                'https://oms.every8d.com/base/path?query=string',
             ],
         ];
     }
@@ -107,27 +105,20 @@ class ClientTest extends TestCase
      */
     public function testShouldBeOkWhenNewRequestWithUri(string $baseUri, string $actualUri, string $exceptedUri)
     {
-        $client = new Client('', '', $this->createMockHttpClient());
+        $client = $this->createClient();
         $client->setBaseURL($baseUri);
 
-        $expected = $this->createRequest(
-            'GET',
-            $exceptedUri
-        );
+        $expected = uri_for($exceptedUri);
+        $actual = $client->newFormRequest($actualUri)->getUri();
 
-        $actual = $client->newRequest(
-            'GET',
-            $actualUri
-        );
-
-        $this->assertEquals($expected->getUri(), $actual->getUri());
+        $this->assertEquals($expected, $actual);
     }
 
     public function testShouldBeOkWhenNewFormRequest()
     {
-        $client = new Client('username', 'password', $this->createMockHttpClient());
+        $client = $this->createClient();
 
-        $expected = $this->createRequest(
+        $expected = new Request(
             'POST',
             'https://oms.every8d.com/path',
             [
@@ -151,12 +142,11 @@ class ClientTest extends TestCase
 
     public function testShouldBeOkWhenSend()
     {
-        $httpClient = $this->createMockHttpClient(
-            $this->createResponse(200, null, [], 'ok')
-        );
-        $client = new Client('', '', $httpClient);
+        $resp = new Response(200, [], 'ok');
+        $client = $this->createClient([], $resp);
 
-        $response = $client->send($this->createRequest('GET', ''));
+        $request = new Request('GET', '');
+        $response = $client->send($request);
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('ok', $response->getBody()->getContents());
@@ -168,11 +158,10 @@ class ClientTest extends TestCase
         $this->expectExceptionMessage('主機端發生不明錯誤，請與廠商窗口聯繫。');
         $this->expectExceptionCode(-99);
 
-        $httpClient = $this->createMockHttpClient(
-            $this->createResponse(200, null, [], '-99, 主機端發生不明錯誤，請與廠商窗口聯繫。')
-        );
-        $client = new Client('', '', $httpClient);
-        $client->send($this->createRequest('GET', ''));
+        $resp = new Response(200, [], '-99, 主機端發生不明錯誤，請與廠商窗口聯繫。');
+
+        $client = $this->createClient([], $resp);
+        $client->send(new Request('GET', ''));
     }
 
     public function testSendWithBadResponseException()
@@ -180,10 +169,9 @@ class ClientTest extends TestCase
         $this->expectException(BadResponseException::class);
         $this->expectExceptionMessage('Unexpected empty body');
 
-        $httpClient = $this->createMockHttpClient($this->createResponse(200));
-
-        $client = new Client('', '', $httpClient);
-        $client->send($this->createRequest('GET', ''));
+        $resp = new Response(200);
+        $client = $this->createClient([], $resp);
+        $client->send(new Request('GET', ''));
     }
 
     public function testSendWithNotFoundException()
@@ -191,10 +179,9 @@ class ClientTest extends TestCase
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('Not found');
 
-        $httpClient = $this->createMockHttpClient($this->createResponse(404));
-
-        $client = new Client('', '', $httpClient);
-        $client->send($this->createRequest('GET', ''));
+        $resp = new Response(404);
+        $client = $this->createClient([], $resp);
+        $client->send(new Request('GET', ''));
     }
 
     public function testSendWithUnexpectedResponseException()
@@ -202,9 +189,8 @@ class ClientTest extends TestCase
         $this->expectException(UnexpectedStatusCodeException::class);
         $this->expectExceptionMessage('Unexpected status code: 402');
 
-        $httpClient = $this->createMockHttpClient($this->createResponse(402));
-
-        $client = new Client('', '', $httpClient);
-        $client->send($this->createRequest('GET', ''));
+        $resp = new Response(402);
+        $client = $this->createClient([], $resp);
+        $client->send(new Request('GET', ''));
     }
 }

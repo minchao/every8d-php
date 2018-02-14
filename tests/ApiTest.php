@@ -2,11 +2,11 @@
 
 namespace Every8d\Tests;
 
-use Every8d\Client;
 use Every8d\Exception\BadResponseException;
 use Every8d\Exception\ErrorResponseException;
 use Every8d\Message\MMS;
 use Every8d\Message\SMS;
+use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
 class ApiTest extends TestCase
@@ -15,8 +15,8 @@ class ApiTest extends TestCase
 
     public function testShouldBeOkWhenGetCredit()
     {
-        $resp = $this->createResponse(200, null, [], '79.0');
-        $client = new Client('', '', $this->createMockHttpClient($resp));
+        $resp = new Response(200, [], '79.0');
+        $client = $this->createClient([], $resp);
 
         $expected = 79.0;
         $actual = $client->getCredit();
@@ -26,13 +26,12 @@ class ApiTest extends TestCase
 
     public function testShouldBeOkWhenSendSMS()
     {
-        $resp = $this->createResponse(
+        $resp = new Response(
             200,
-            null,
             [],
             '87.0,1,1,0,00000000-0000-0000-0000-000000000000'
         );
-        $client = new Client('', '', $this->createMockHttpClient($resp));
+        $client = $this->createClient([], $resp);
 
         $expected = [
             'Credit' => 87.0,
@@ -49,13 +48,12 @@ class ApiTest extends TestCase
 
     public function testShouldBeOkWhenSendMMS()
     {
-        $resp = $this->createResponse(
+        $resp = new Response(
             200,
-            null,
             [],
             '80.0,1,1,0,A0000000-0000-0000-0000-000000000000'
         );
-        $client = new Client('', '', $this->createMockHttpClient($resp));
+        $client = $this->createClient([], $resp);
 
         $expected = [
             'Credit' => 80.0,
@@ -78,13 +76,12 @@ class ApiTest extends TestCase
 
     public function testShouldBeOkWhenGetDeliveryStatusBySMS()
     {
-        $resp = $this->createResponse(
+        $resp = new Response(
             200,
-            null,
             [],
             "2\nTest	+886987654321	2017/12/18 23:14:17	1	100\n	+886987654321	2017/12/18 23:14:18	0	101\n"
         );
-        $client = new Client('', '', $this->createMockHttpClient($resp));
+        $client = $this->createClient([], $resp);
 
         $expected = [
             'Count' => 2,
@@ -112,13 +109,12 @@ class ApiTest extends TestCase
 
     public function testShouldBeOkWhenGetDeliveryStatusByMMS()
     {
-        $resp = $this->createResponse(
+        $resp = new Response(
             200,
-            null,
             [],
             "0\n"
         );
-        $client = new Client('', '', $this->createMockHttpClient($resp));
+        $client = $this->createClient([], $resp);
 
         $expected = [
             'Count' => 0,
@@ -135,25 +131,23 @@ class ApiTest extends TestCase
         $this->expectException(BadResponseException::class);
         $this->expectExceptionMessage('Invalid delivery status');
 
-        $resp = $this->createResponse(
+        $resp = new Response(
             200,
-            null,
             [],
             "0"
         );
-        $client = new Client('', '', $this->createMockHttpClient($resp));
+        $client = $this->createClient([], $resp);
         $client->getDeliveryStatusByMMS('00000000-0000-0000-0000-000000000000');
     }
 
     public function testShouldBeOkWhenCancelSMS()
     {
-        $resp = $this->createResponse(
+        $resp = new Response(
             200,
-            null,
             [],
             '1,1.00'
         );
-        $client = new Client('', '', $this->createMockHttpClient($resp));
+        $client = $this->createClient([], $resp);
 
         $expected = [
             'Canceled' => 1,
@@ -166,13 +160,12 @@ class ApiTest extends TestCase
 
     public function testShouldBeOkWhenCancelMMS()
     {
-        $resp = $this->createResponse(
+        $resp = new Response(
             200,
-            null,
             [],
             '2,2.00'
         );
-        $client = new Client('', '', $this->createMockHttpClient($resp));
+        $client = $this->createClient([], $resp);
 
         $expected = [
             'Canceled' => 2,
@@ -188,13 +181,12 @@ class ApiTest extends TestCase
         $this->expectException(BadResponseException::class);
         $this->expectExceptionMessage('Bad response of cancel message');
 
-        $resp = $this->createResponse(
+        $resp = new Response(
             200,
-            null,
             [],
             '1'
         );
-        $client = new Client('', '', $this->createMockHttpClient($resp));
+        $client = $this->createClient([], $resp);
         $client->cancelSMS('00000000-0000-0000-0000-000000000000');
     }
 
@@ -209,6 +201,8 @@ class ApiTest extends TestCase
 
     /**
      * @dataProvider getErrorCodeOfCancelMessageCases()
+     * @param int $errorCode
+     * @param string $errorMessage
      */
     public function testCancelSMSWithBadResponseExceptionWithErrorCode(int $errorCode, string $errorMessage)
     {
@@ -216,13 +210,12 @@ class ApiTest extends TestCase
         $this->expectExceptionMessage($errorMessage);
         $this->expectExceptionCode($errorCode);
 
-        $resp = $this->createResponse(
+        $resp = new Response(
             200,
-            null,
             [],
             sprintf('%d,%s', $errorCode, $errorMessage)
         );
-        $client = new Client('', '', $this->createMockHttpClient($resp));
+        $client = $this->createClient([], $resp);
         $client->cancelSMS('00000000-0000-0000-0000-000000000000');
     }
 }
