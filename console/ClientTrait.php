@@ -16,6 +16,9 @@ trait ClientTrait
             throw new \InvalidArgumentException('The --username and --password are required');
         }
 
-        return new Client($username, $password);
+        return new Client([
+            'username' => $username,
+            'password' => $password,
+        ]);
     }
 }
