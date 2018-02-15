@@ -24,7 +24,7 @@ class ClientTest extends TestCase
         $this->assertInstanceOf(ClientInterface::class, $client->getHttpClient());
         $this->assertEquals(Client::DEFAULT_USER_AGENT, $client->getUserAgent());
         $this->assertEquals('UserAgent', $client->setUserAgent('UserAgent')->getUserAgent());
-        $this->assertEquals(Client::DEFAULT_BASE_URL, $client->getBaseURL());
+        $this->assertEquals(Client::DEFAULT_BASE_URL, $client->getBaseUrl());
     }
 
     public function testShouldThrowBadMethodCallExceptionWhenCallNotExistsMethodInClient()
@@ -106,7 +106,7 @@ class ClientTest extends TestCase
     public function testShouldBeOkWhenNewRequestWithUri(string $baseUri, string $actualUri, string $exceptedUri)
     {
         $client = $this->createClient();
-        $client->setBaseURL($baseUri);
+        $client->setBaseUrl($baseUri);
 
         $expected = uri_for($exceptedUri);
         $actual = $client->newFormRequest($actualUri)->getUri();

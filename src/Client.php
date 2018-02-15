@@ -51,7 +51,7 @@ class Client
     /**
      * @var UriInterface
      */
-    protected $baseURL;
+    protected $baseUrl;
 
     /**
      * @var string
@@ -112,14 +112,14 @@ class Client
         return $this;
     }
 
-    public function getBaseURL(): UriInterface
+    public function getBaseUrl(): UriInterface
     {
-        return $this->baseURL;
+        return $this->baseUrl;
     }
 
-    public function setBaseURL(string $baseURL): self
+    public function setBaseUrl(string $baseUrl): self
     {
-        $this->baseURL = new Uri($baseURL);
+        $this->baseUrl = new Uri($baseUrl);
 
         return $this;
     }
@@ -134,13 +134,13 @@ class Client
     public function newRequest(string $method, $uri, array $headers = [], $body = null): RequestInterface
     {
         $uri = uri_for($uri);
-        $path = rtrim($this->baseURL->getPath() . $uri->getPath(), '/');
+        $path = rtrim($this->baseUrl->getPath() . $uri->getPath(), '/');
 
         $uri = $uri
-            ->withScheme($this->baseURL->getScheme())
-            ->withUserInfo($this->baseURL->getUserInfo())
-            ->withHost($this->baseURL->getHost())
-            ->withPort($this->baseURL->getPort())
+            ->withScheme($this->baseUrl->getScheme())
+            ->withUserInfo($this->baseUrl->getUserInfo())
+            ->withHost($this->baseUrl->getHost())
+            ->withPort($this->baseUrl->getPort())
             ->withPath($path);
 
         $headers['User-Agent'] = $this->userAgent;
