@@ -62,7 +62,7 @@ try {
 }
 ```
 
-$result:
+Result:
 
 ```php
 [
@@ -72,6 +72,52 @@ $result:
     'Unsent' => 0,
     'BatchID' => '00000000-0000-0000-0000-000000000000',
 ]
+```
+
+#### 查詢 SMS 發送狀態
+
+Example:
+
+```php
+try {
+    $batchId = '00000000-0000-0000-0000-000000000000';
+    $result = $client->getDeliveryStatusBySMS($batchId);
+} catch (\Exception $e) {
+    // 處理異常
+}
+```
+
+Result:
+
+```php
+[
+    'Count' => 1,
+    'Records' => [
+        'Name' => '',
+        'Mobile' => '+886987654321',
+        'SendTime' => '2018/01/01 00:00:00',
+        'Cost' => 1.0,
+        'Status' => 0,
+    ],
+]
+```
+
+#### 查詢餘額
+
+Example:
+
+```php
+try {
+    $client->getCredit();
+} catch (\Exception $e) {
+    // 處理異常
+}
+```
+
+Result:
+
+```php
+79.0
 ```
 
 ### 使用 Webhook 接收簡訊發送回報
