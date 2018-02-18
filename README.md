@@ -7,7 +7,7 @@
 [![Latest Unstable Version](https://poser.pugx.org/minchao/every8d-php/v/unstable)](https://packagist.org/packages/minchao/every8d-php)
 [![composer.lock](https://poser.pugx.org/minchao/every8d-php/composerlock)](https://packagist.org/packages/minchao/every8d-php)
 
-every8d-php 是 [EVERY8D](http://global.every8d.com.tw/) SMS HTTP API 2.1 的非官方 PHP Client SDK，使用前請先確認您已申請 EVERY8D 簡訊帳號
+every8d-php 是 [EVERY8D](http://global.every8d.com.tw/) SMS HTTP API 2.1 的非官方 PHP Client SDK，使用前請先確認您已申請 EVERY8D 簡訊帳號。若您想在 Laravel 下使用，請參考 [every8d-laravel](https://github.com/minchao/every8d-laravel) 提供的 Service provider。
 
 支援的 APIs：
 
@@ -32,12 +32,12 @@ every8d-php 是 [EVERY8D](http://global.every8d.com.tw/) SMS HTTP API 2.1 的非
 推薦使用 [Composer](https://getcomposer.org/) 安裝 every8d-php SDK，請在您的專案下執行：
 
 ```
-composer require minchao/every8d-php
+$ composer require minchao/every8d-php
 ```
 
 ## 使用
 
-初始化 Client，設定 EVERY8D 帳號與密碼
+初始化 Client，設定 EVERY8D 帳號與密碼。
 
 ```php
 <?php
@@ -122,11 +122,11 @@ Result:
 
 ### 使用 Webhook 接收簡訊發送回報
 
-若您的帳號有設定 callback 回報網址，簡訊伺服器就會在簡訊發送後以 HTTP GET 方法通知回報網址。您可參考 [webhook](./webhook/index.php) 中的範例來接收簡訊發送回報
+若您的帳號有設定 callback 回報網址，簡訊伺服器就會在簡訊發送後以 HTTP GET 方法通知回報網址。您可參考 [webhook](./webhook/index.php) 中的範例來接收簡訊發送回報。
 
 啟動 Webhook：
 
-使用 [PHP Built-in web server](http://php.net/manual/en/features.commandline.webserver.php) 快速啟動一個 Webhook 服務
+使用 [PHP Built-in web server](http://php.net/manual/en/features.commandline.webserver.php) 快速啟動一個 Webhook 服務。
 
 ```
 $ php -S 127.0.0.1:80 -t webhook webhook/index.php
@@ -140,7 +140,7 @@ Press Ctrl-C to quit.
 
 回報範例：
 
-這是一個發送 SMS 後，接收到的回報範例
+這是一個發送 SMS 後，接收到的回報範例。
 
 ```
 [Mon Jan  1 12:01:00 2018] http://your-webhook.com/callback?BatchID=00000000-0000-0000-0000-000000000000&RM=%2b886987654321&RT=20180101120002&STATUS=100&SM=Hello%2c+%e4%b8%96%e7%95%8c&CustID=CUSTID&UserNo=000000&ST=20180101120001&MR=1&SUBJECT=&NAME=NAME&USERID=USERNAME&SOURCE=&CHARGE=0
@@ -166,7 +166,7 @@ array:14 [
 
 ### 開發工具
 
-本專案提供 Command Line Developer Tools，供您在開發時作為測試工具使用
+本專案提供 Command Line Developer Tools，供您在開發時作為測試工具使用。
 
 指令：
 
@@ -212,13 +212,13 @@ array:5 [
 
 ### 測試
 
-執行 PHPCS 與 Unit tests
+執行 PHPCS 與 Unit tests。
 
 ```
 $ composer run check
 ```
 
-產生測試覆蓋率報告
+產生測試覆蓋率報告。
 
 ```
 $ composer run coverage-html
