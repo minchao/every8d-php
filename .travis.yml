@@ -1,11 +1,17 @@
+sudo: false
 language: php
 
 php:
-  - 7.0
-  - 7.1
-  - 7.2
+- 7.0
+- 7.1
+- 7.2
+- 7.3
+- nightly
 
-sudo: false
+matrix:
+  allow_failures:
+  - php: 7.3
+  - php: nightly
 
 cache:
   directories:
@@ -13,11 +19,11 @@ cache:
   - vendor
 
 install:
-  - composer install --prefer-dist
+- composer install --prefer-dist
 
 script:
-  - composer run cs-check
-  - composer run coverage-clover
+- composer run cs-check
+- composer run coverage-clover
 
 after_script:
-  - php vendor/bin/codacycoverage clover build/coverage/clover.xml
+- php vendor/bin/codacycoverage clover build/coverage/clover.xml
