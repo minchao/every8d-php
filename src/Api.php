@@ -27,7 +27,7 @@ class Api
      */
     public function getCredit(): float
     {
-        $request = $this->client->newFormRequest('API21/HTTP/getCredit.ashx');
+        $request = $this->client->newFormRequest('/API21/HTTP/getCredit.ashx');
         $response = $this->client->send($request);
         $contents = $response->getBody()->getContents();
 
@@ -69,7 +69,7 @@ class Api
      */
     public function sendSMS(SMS $sms): array
     {
-        return $this->send('API21/HTTP/sendSMS.ashx', $sms->buildFormData());
+        return $this->send('/API21/HTTP/sendSMS.ashx', $sms->buildFormData());
     }
 
     /**
@@ -82,7 +82,7 @@ class Api
      */
     public function sendMMS(MMS $mms): array
     {
-        return $this->send('API21/HTTP/MMS/sendMMS.ashx', $mms->buildFormData());
+        return $this->send('/API21/HTTP/MMS/sendMMS.ashx', $mms->buildFormData());
     }
 
     /**
@@ -96,7 +96,7 @@ class Api
      */
     public function getDeliveryStatusBySMS(string $batchID, int $pageNo = null): array
     {
-        return $this->getDeliveryStatus('API21/HTTP/getDeliveryStatus.ashx', $batchID, $pageNo);
+        return $this->getDeliveryStatus('/API21/HTTP/getDeliveryStatus.ashx', $batchID, $pageNo);
     }
 
     /**
@@ -110,7 +110,7 @@ class Api
      */
     public function getDeliveryStatusByMMS(string $batchID, int $pageNo = null): array
     {
-        return $this->getDeliveryStatus('API21/HTTP/MMS/getDeliveryStatus.ashx', $batchID, $pageNo);
+        return $this->getDeliveryStatus('/API21/HTTP/MMS/getDeliveryStatus.ashx', $batchID, $pageNo);
     }
 
     /**
@@ -171,7 +171,7 @@ class Api
      */
     public function cancelSMS(string $batchID): array
     {
-        return $this->cancelMessage('API21/HTTP/eraseBooking.ashx', $batchID);
+        return $this->cancelMessage('/API21/HTTP/eraseBooking.ashx', $batchID);
     }
 
     /**
@@ -184,7 +184,7 @@ class Api
      */
     public function cancelMMS(string $batchID): array
     {
-        return $this->cancelMessage('API21/HTTP/MMS/eraseBooking.ashx', $batchID);
+        return $this->cancelMessage('/API21/HTTP/MMS/eraseBooking.ashx', $batchID);
     }
 
     /**
