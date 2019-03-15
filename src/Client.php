@@ -28,7 +28,7 @@ use Psr\Http\Message\UriInterface;
  */
 class Client
 {
-    const LIBRARY_VERSION = '1.0.0';
+    const LIBRARY_VERSION = '1.0.2';
 
     const DEFAULT_BASE_URL = 'https://oms.every8d.com/';
 
