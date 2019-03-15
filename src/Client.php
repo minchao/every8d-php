@@ -137,11 +137,11 @@ class Client
         $path = rtrim($this->baseUrl->getPath() . $uri->getPath(), '/');
 
         $uri = $uri
+            ->withPath($path)
             ->withScheme($this->baseUrl->getScheme())
             ->withUserInfo($this->baseUrl->getUserInfo())
             ->withHost($this->baseUrl->getHost())
-            ->withPort($this->baseUrl->getPort())
-            ->withPath($path);
+            ->withPort($this->baseUrl->getPort());
 
         $headers['User-Agent'] = $this->userAgent;
 
