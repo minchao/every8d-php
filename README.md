@@ -31,7 +31,7 @@ every8d-php 是 [EVERY8D](http://global.every8d.com.tw/) SMS HTTP API 2.1 的非
 
 推薦使用 [Composer](https://getcomposer.org/) 安裝 every8d-php SDK，請在您的專案下執行：
 
-```
+```console
 $ composer require minchao/every8d-php
 ```
 
@@ -128,7 +128,7 @@ Result:
 
 使用 [PHP Built-in web server](http://php.net/manual/en/features.commandline.webserver.php) 快速啟動一個 Webhook 服務。
 
-```
+```console
 $ php -S 127.0.0.1:80 -t webhook webhook/index.php
 PHP 7.0.26 Development Server started at Mon Jan  1 12:00:00 2018
 Listening on http://127.0.0.1:80
@@ -170,7 +170,7 @@ array:14 [
 
 指令：
 
-```
+```console
 $ bin/every8d
 Developer Tools 0.0.1
 
@@ -199,7 +199,7 @@ Available commands:
 
 發送 SMS 範例如下：
 
-```
+```console
 $ bin/every8d send -u USERNAME -p PASSWORD +886987654321 'Hello, World'
 array:5 [
   "Credit" => 79.0
@@ -214,13 +214,13 @@ array:5 [
 
 執行 PHPCS 與 Unit tests。
 
-```
+```console
 $ composer run check
 ```
 
 產生測試覆蓋率報告。
 
-```
+```console
 $ composer run coverage-html
 ```
 
