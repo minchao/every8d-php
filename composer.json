@@ -20,8 +20,8 @@
   "require-dev": {
     "codacy/coverage": "^1.4",
     "phpunit/phpunit": "^6.5",
-    "slim/slim": "^3.9",
-    "squizlabs/php_codesniffer": "^3.2",
+    "slim/slim": "^3.12",
+    "squizlabs/php_codesniffer": "^3.5",
     "symfony/console": "^3.4",
     "symfony/var-dumper": "^3.4"
   },
@@ -41,11 +41,11 @@
   },
   "scripts": {
     "check": [
-      "@cs-check",
+      "@lint",
       "@test"
     ],
-    "cs-check": "phpcs",
-    "cs-fix": "phpcbf",
+    "lint": "phpcs",
+    "lint-fix": "phpcbf",
     "test": "phpunit",
     "coverage-clover": "phpunit --coverage-clover=build/coverage/clover.xml",
     "coverage-html": "phpunit --coverage-html=build/coverage-html"
