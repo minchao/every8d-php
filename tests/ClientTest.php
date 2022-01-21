@@ -10,7 +10,7 @@ use Every8d\Exception\UnexpectedStatusCodeException;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
-use function GuzzleHttp\Psr7\uri_for;
+use GuzzleHttp\Psr7\Utils;
 use PHPUnit\Framework\TestCase;
 
 class ClientTest extends TestCase
@@ -107,8 +107,12 @@ class ClientTest extends TestCase
     {
         $client = $this->createClient();
         $client->setBaseUrl($baseUri);
+        if (method_exists(Utils::class, 'uriFor')) {
+            $expected = Utils::uriFor($exceptedUri);
+        } else {
+            $expected = \GuzzleHttp\Psr7\uri_for($exceptedUri);
+        }
 
-        $expected = uri_for($exceptedUri);
         $actual = $client->newFormRequest($actualUri)->getUri();
 
         $this->assertEquals($expected, $actual);

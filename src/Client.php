@@ -11,7 +11,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
-use function GuzzleHttp\Psr7\uri_for;
+use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
@@ -133,7 +133,11 @@ class Client
      */
     public function newRequest(string $method, $uri, array $headers = [], $body = null): RequestInterface
     {
-        $uri = uri_for($uri);
+        if (method_exists(Utils::class, 'uriFor')) {
+            $uri = Utils::uriFor($uri);
+        } else {
+            $uri = \GuzzleHttp\Psr7\uri_for($uri);
+        }
         $path = rtrim($this->baseUrl->getPath() . $uri->getPath(), '/');
 
         $uri = $uri
