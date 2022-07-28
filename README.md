@@ -1,8 +1,6 @@
 # every8d-php
 
 [![Build Status](https://travis-ci.org/minchao/every8d-php.svg?branch=master)](https://travis-ci.org/minchao/every8d-php)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/95646cba27e7495d94f364546142d0fc)](https://www.codacy.com/app/minchao/every8d-php?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=minchao/every8d-php&amp;utm_campaign=Badge_Grade)
-[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/95646cba27e7495d94f364546142d0fc)](https://www.codacy.com/app/minchao/every8d-php?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=minchao/every8d-php&amp;utm_campaign=Badge_Coverage)
 [![Latest Stable Version](https://poser.pugx.org/minchao/every8d-php/v/stable)](https://packagist.org/packages/minchao/every8d-php)
 [![Latest Unstable Version](https://poser.pugx.org/minchao/every8d-php/v/unstable)](https://packagist.org/packages/minchao/every8d-php)
 [![composer.lock](https://poser.pugx.org/minchao/every8d-php/composerlock)](https://packagist.org/packages/minchao/every8d-php)
