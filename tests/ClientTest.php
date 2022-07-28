@@ -42,7 +42,7 @@ class ClientTest extends TestCase
 
         $expected = new Request(
             'GET',
-            'https://oms.every8d.com/path',
+            'https://oms.e8d.tw/path',
             [
                 'User-Agent' => $client->getUserAgent(),
                 'Content-Type' => 'text/html; charset=utf-8',
@@ -70,29 +70,29 @@ class ClientTest extends TestCase
     {
         return [
             [
-                'https://oms.every8d.com/',
+                'https://oms.e8d.tw/',
                 '',
-                'https://oms.every8d.com',
+                'https://oms.e8d.tw',
             ],
             [
-                'https://oms.every8d.com/',
+                'https://oms.e8d.tw/',
                 'path',
-                'https://oms.every8d.com/path',
+                'https://oms.e8d.tw/path',
             ],
             [
-                'https://oms.every8d.com/',
+                'https://oms.e8d.tw/',
                 'base/path',
-                'https://oms.every8d.com/base/path',
+                'https://oms.e8d.tw/base/path',
             ],
             [
-                'https://oms.every8d.com/base/',
+                'https://oms.e8d.tw/base/',
                 'path',
-                'https://oms.every8d.com/base/path',
+                'https://oms.e8d.tw/base/path',
             ],
             [
-                'https://oms.every8d.com/',
+                'https://oms.e8d.tw/',
                 'base/path?query=string',
-                'https://oms.every8d.com/base/path?query=string',
+                'https://oms.e8d.tw/base/path?query=string',
             ],
         ];
     }
@@ -124,7 +124,7 @@ class ClientTest extends TestCase
 
         $expected = new Request(
             'POST',
-            'https://oms.every8d.com/path',
+            'https://oms.e8d.tw/path',
             [
                 'User-Agent' => $client->getUserAgent(),
                 'Content-Type' => 'application/x-www-form-urlencoded',

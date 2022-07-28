@@ -28,9 +28,9 @@ use Psr\Http\Message\UriInterface;
  */
 class Client
 {
-    const LIBRARY_VERSION = '1.0.2';
+    const LIBRARY_VERSION = '1.1.0';
 
-    const DEFAULT_BASE_URL = 'https://oms.every8d.com/';
+    const DEFAULT_BASE_URL = 'https://oms.e8d.tw/';
 
     const DEFAULT_USER_AGENT = 'every8d-php/' . self::LIBRARY_VERSION;
 
